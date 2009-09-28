@@ -1,0 +1,102 @@
+# Set of context specifications from frequency considerations: 
+# Take all labels that are more frequent than 500,000 times
+# (covers about 76/88M relations) and sort out linguistically 
+# relevant ones
+# minimal plus noun complex support
+# 09 07 02 - sebastian pado // new format 27 05 04
+
+# all informative paths are specified symmetrically
+
+*:Prep:pcomp-n:N:*	# prepositional phrases (with a scarf)
+*:N:pcomp-n:Prep:*
+
+*:V:subj:N:*	# subject
+*:N:subj:V:*
+
+*:V:subj:N:*=*:N:lex-mod:(null):*	# verb with noun complex as subj 
+*:(null):lex-mod:N:*=*:N:subj:V:*
+
+*:V:subj:N:*=*:N:nn:N:*	# verb with noun complex as subj 
+*:N:nn:N:*=*:N:subj:V:*
+
+*:V:obj:N:*	# object
+*:N:obj:V:*
+
+*:V:obj:N:*=*:N:lex-mod:(null):*	# verb with noun complex as obj 
+*:(null):lex-mod:N:*=*:N:obj:V:*
+
+*:V:obj:N:*=*:N:nn:N:*	# verb with noun complex as obj 
+*:N:nn:N:*=*:N:obj:V:*
+
+*:N:mod:A:*	# noun with adjectives (good food)
+*:A:mod:N:*
+
+*:A:mod:N:*=*:N:lex-mod:(null):*	# adjective with noun complex
+*:(null):lex-mod:N:*=*:N:mod:A:*
+
+*:A:mod:N:*=*:N:nn:N:*	# adjective with noun complex
+*:N:nn:N:*=*:N:mod:A:*
+
+*:N:mod:Prep:*	# noun with prepositions (apple with)
+*:Prep:mod:N:*
+
+*:Prep:mod:N:*=*:N:lex-mod:(null):*	# preposition with noun complex
+*:(null):lex-mod:N:*=*:N:mod:Pred:*
+
+*:Prep:mod:N:*=*:N:nn:N:*	# preposition with noun complex
+*:N:nn:N:*=*:N:mod:Pred:*
+
+*:N:nn:N:*	# multi-word nominal constructions (security council)
+
+*:V:aux:Aux:*	# verbs with auxiliaries
+*:Aux:aux:V:*
+
+*:V:mod:Prep:*	# verbs with prepositions (walk with)
+*:Prep:mod:V:*
+
+*:N:gen:N:*	# genitive constructions 
+
+*:N:gen:N:*=*:N:lex-mod:(null):*	# genitive constructions 
+*:(null):lex-mod:N:*=*:N:gen:N:*	# genitive constructions, noun complex 
+*:(null):lex-mod:N:*=*:N:gen:N:*=*:N:lex-mod:(null):*	# genitive constructions, noun complexes 
+*:N:gen:N:*=*:N:nn:N:*	# genitive constructions 
+*:N:nn:N:*=*:N:gen:N:*	# genitive constructions, noun complex 
+*:N:nn:N:*=*:N:gen:N:*=*:N:nn:N:*	# genitive constructions, noun complexes 
+
+*:N:conj:N:*	# conjunctions (fire and water)
+
+*:N:conj:N:*=*:N:lex-mod:(null):*	# genitive constructions 
+*:(null):lex-mod:N:*=*:N:conj:N:*	# genitive constructions, noun complex 
+*:(null):lex-mod:N:*=*:N:conj:N:*=*:N:lex-mod:(null):*	# genitive constructions, noun complexes 
+
+*:N:conj:N:*=*:N:nn:N:*	# genitive constructions 
+*:N:nn:N:*=*:N:conj:N:*	# genitive constructions, noun complex 
+*:N:nn:N:*=*:N:conj:N:*=*:N:nn:N:*	# genitive constructions, noun complexes 
+
+*:V:amod:A:*	# adverbs (currently offer) 
+*:A:amod:V:*
+
+*:A:mod:A:*	# adjective complexes (often infected)
+*:A:mod:A:*
+
+*:V:lex-mod:(null):*	# verb complexes (carry out)
+*:(null):lex-mod:V:*
+
+*:N:subj:N:*	# is-phrases (Cliff is new patron)
+
+*:V:mod:A:*	# adverbs (happen indoors)
+*:A:mod:V:*
+
+*:A:subj:N:*	# is-phrases (stench is bad)
+*:N:subj:A:*
+
+*:A:subj:N:*=*:N:lex-mod:(null):*	# is-phrases with noun complexes
+*:(null):lex-mod:N:*=*:N:subj:A:*
+
+*:A:subj:N:*=*:N:nn:N:*	# is-phrases with noun complexes
+*:N:nn:N:*=*:N:subj:A:*
+
+*:A:mod:Prep:*	# adjective with preposition (infected with)
+*:Prep:mod:A:*
+
+

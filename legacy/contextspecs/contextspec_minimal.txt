@@ -1,0 +1,57 @@
+# Minimal Set of context specifications 
+# Take all labels that are more frequent than 500,000 times
+# (covers about 76/88M relations in the BNC) and sort out linguistically 
+# relevant one. Form no non-atomic paths whatsoever.
+# 09 07 02 - sebastian pado
+
+# all informative paths are specified symmetrically
+
+*:Prep:pcomp-n:N:*	# prepositional phrases (with a scarf)
+*:N:pcomp-n:Prep:*
+
+*:V:subj:N:*	# subject
+*:N:subj:V:*
+
+*:V:obj:N:*	# object
+*:N:obj:V:*
+
+*:V:obj2:N:*	# indirect object
+*:N:obj2:V:*
+
+*:N:mod:A:*	# noun with adjectives (good food)
+*:A:mod:N:*
+
+*:N:mod:Prep:*	# noun with prepositions (apple with)
+*:Prep:mod:N:*
+
+*:N:nn:N:*	# multi-word nominal constructions (security council)
+
+*:V:aux:Aux:*	# verbs with auxiliaries
+*:Aux:aux:V:*
+
+*:V:mod:Prep:*	# verbs with prepositions (walk with)
+*:Prep:mod:V:*
+
+*:N:gen:N:*	# genitive constructions 
+
+*:N:conj:N:*	# noun conjuncts (fire and water)
+
+*:V:amod:A:*	# adverbs (currently offer) 
+*:A:amod:V:*
+
+*:A:mod:A:*	# adjective complexes (often infected)
+*:A:mod:A:*
+
+*:V:lex-mod:(null):*	# verb complexes (carry out)
+*:(null):lex-mod:V:*
+
+*:N:subj:N:*	# is-phrases (Cliff is new patron)
+
+*:V:mod:A:*	# adverbs (happen indoors)
+*:A:mod:V:*
+
+*:A:subj:N:*	# is-phrases (stench is bad)
+*:N:subj:A:*
+
+*:A:mod:Prep:*	# adjective with preposition (infected with)
+*:Prep:mod:A:*

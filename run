@@ -1,0 +1,5 @@
+#!/bin/bash
+# Run all three tasks in succession
+nice ruby Naming.rb $1;
+nice ruby Typicality.rb $1
+nice ruby Generation.rb $1

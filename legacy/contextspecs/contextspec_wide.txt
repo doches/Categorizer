@@ -1,0 +1,117 @@
+# Set of context specifications from frequency considerations: 
+# Take all labels that are more frequent than 500,000 times
+# (covers about 76/88M relations) and sort out linguistically 
+# relevant ones
+# wide context specification
+# tries to catch all indirect (path length 2--3) relationships
+# but leaves out NP complexes
+# 17 07 02 - sebastian pado - new format 28 05 04
+
+# all informative paths are specified symmetrically
+
+# Part 1: subject and object relations (N-V)
+
+*:V:subj:N:*	# subject
+*:N:subj:V:*
+
+*:V:obj:N:*	# object
+*:N:obj:V:*
+
+*:N:subj:V:*=*:V:obj:N:*	# relation between a subject and an object of the same verb
+*:N:obj:V:*=*:V:subj:N:*
+
+*:N:subj:N:*	# is-phrases (Cliff is new patron)
+
+*:A:subj:N:*	# is-phrases (stench is bad)
+*:N:subj:A:*
+
+
+# Part 2: noun complexes (N-N)
+
+*:N:nn:N:*	# multi-word nominal constructions (security council)
+
+*:N:lex-mod:(null):*	     # noun complexes
+*:(null):lex-mod:N:*
+
+*:N:gen:N:*	# genitive constructions 
+
+*:N:conj:N:*	# conjunctions (fire and water)
+
+
+# Part 3: Adjective-involving relations
+
+*:N:mod:A:*	# noun with adjectives (good food)
+*:A:mod:N:*
+*:N:mod:A:*=*:A:mod:A:*	# noun with adjective complex
+*:A:mod:A:*=*:A:mod:N:*
+
+*:A:mod:A:*	# adjective complexes (often infected)
+*:A:mod:A:*
+
+*:V:amod:A:*	# adverbs (currently offer) 
+*:A:amod:V:*
+*:V:amod:A:*=*:A:mod:A:*	# adverbs (currently offer) 
+*:A:mod:A:*=*:A:amod:V:*
+
+*:V:mod:A:*	# adverbs (happen indoors)
+*:A:mod:V:*
+*:V:mod:A:*=*:A:mod:A:*
+*:A:mod:A:*=*:A:mod:V:*
+
+
+
+
+
+# Part 4: Prepositional phrases
+
+
+*:A:mod:Prep:*	# adjective with preposition (infected with)
+*:Prep:mod:A:*
+*:A:mod:Prep:*=*:Prep:pcomp-n:N:*	# adjectives with pp (infected with HIV)
+*:N:pcomp-n:Pred:*=*:Prep:mod:A:*
+
+*:Prep:pcomp-n:N:*	# prepositional phrases (with a scarf)
+*:N:pcomp-n:Prep:*
+
+*:N:mod:Prep:*	# noun with prepositions (apple with)
+*:Prep:mod:N:*
+
+*:N:mod:Prep:*=*:Prep:pcomp-n:N:*	# noun with pp noun (father of children)
+*:N:pcomp-n:Prep:*=*:Prep:mod:N:*
+
+*:V:mod:Prep:*	# verbs with prepositions (walk with)
+*:Prep:mod:V:*
+*:V:mod:Prep:*=*:Prep:pcomp-n:N:*	# verbs with pp (walk with a stick)
+*:N:pcomp-n:Prep:*=*:Prep:mod:V:*
+
+
+# Part 5: Relative clauses
+
+*:N:rel:C:*=*:C:i:V:*	# relative clause verb (the speaker who informed) 
+*:V:i:C:*=*:C:rel:N:*
+
+*:N:rel:C:*=*:C:s:V:*	# relative clause noun
+*:N:s:C:*=*:C:rel:N:*
+
+# Part 6: Other verb constructions
+
+*:V:aux:Aux:*	# verbs with auxiliaries
+*:Aux:aux:V:*
+
+*:V:fc:C:*=*:C:i:V:*	# verb with clausal complement verb (responded that many are interested)
+*:V:i:C:*=*:C:fc:V:*
+
+*:V:fc:C:*=*:C:s:N:*	# verb with clausal complement (surface) subject
+*:N:s:C:*=*:C:fc:V:*
+
+*:V:lex-mod:(null):*	# complex verbs (carry out)
+*:(null):lex-mod:V:*
+
+*:SentAdjunct:comp1:C:*=*:C:i:V:*	# sentences starting with adverbs (meanwhile...)
+*:V:i:C:*=*:C:comp1:SentAdjunct:*
+
+*:V:mod:SentAdjunct:*=*:SentAdjunct:comp1:C:*=*:C:i:V:*	# more complex clausal complements (affect so that it grows)
+*:V:i:C:*=*:C:comp1:SentAdjunct:*=*:SentAdjuct:mod:V:*
+
+
+
