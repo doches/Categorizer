@@ -1,12 +1,12 @@
 require 'lib/LsaModel'
 require 'lib/Label'
 
-class LsaLabelBalapincModel < LsaModel
+class LsaLabelCosineModel < LsaModel
   include Label
   
   def initialize
     super
     
-    init_label(:balapinc)
+    init_label(:cosine)
   end
 end

@@ -1,7 +1,7 @@
-require 'lib/LsaModel'
+require 'lib/LdaModel'
 require 'lib/Label'
 
-class LsaLabelBalapincModel < LsaModel
+class LdaLabelBalapincModel < LdaModel
   include Label
   
   def initialize
