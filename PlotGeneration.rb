@@ -4,7 +4,7 @@ require 'lib/Report'
 cats = {}
 
 Dir.foreach("results/generation/") do |file|
-  if file =~ /(Lsa|Lda)(Cluster3|Cluto|Autoclass|Baseline|Label|Cw)([^\.]*)\.report$/
+  if file =~ /(Lsa|Lda|Depspace)(Cluster3|Cluto|Autoclass|Baseline|Label|Cw)([^\.]*)\.report$/
     if `cat results/generation/#{file} | wc -l`.strip.to_i > 0
       cats[$2] ||= []
       cats[$2].push "results/generation/"+file
