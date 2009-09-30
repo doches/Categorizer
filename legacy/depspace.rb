@@ -1,6 +1,4 @@
 require 'progressbar'
-require 'lib/ncosine'
-require 'narray'
 
 class DependencySpace
   def initialize(file,progress=false)
@@ -23,10 +21,10 @@ class DependencySpace
     lines = IO.readlines(vectorfile) # ouch
     @headers = lines.shift
     @map = {}
-    pbar = ProgressBar.new("Transforming",lines.size) if @progress
+    pbar = ProgressBar.new("Loading",lines.size) if @progress
     lines.each do |line|
       word,dims = *line.split(": ")
-      @map[word] = NVector.to_na(dims.split(" ").map { |x| x.to_i })
+      @map[word] = dims.split(" ").map { |x| x.to_i }
       pbar.inc if @progress
     end
     pbar.finish if @progress

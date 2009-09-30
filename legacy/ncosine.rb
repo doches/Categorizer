@@ -14,7 +14,12 @@ def dot_product_e l1, l2
 end
 
 def dot_product_n(a,b)
-  return a*b
+  dot = a*b
+  if dot < 0
+    return dot_product_e(a,b)
+  else
+    return dot
+  end
 end
 
 def magnitude_e(v)
