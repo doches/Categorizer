@@ -45,7 +45,19 @@ module Baseline
         STDERR.puts "No vector for '#{exemplar}', ignoring in sim_cluster(<something>,#{clabel})" if @debug
       else
         exemplar_vector = NVector.to_na(exemplar_vector)
-        sim += cosine(word_vector,exemplar_vector)
+        cos = cosine(word_vector,exemplar_vector)
+        if cos.is_a?(Complex)
+          STDERR.puts word_vector.inspect
+          STDERR.puts exemplar
+          STDERR.puts exemplar_vector.inspect
+          STDERR.puts " -"
+          STDERR.puts dot_product_n(word_vector,exemplar_vector)
+          STDERR.puts dot_product_n(exemplar_vector,exemplar_vector)
+          STDERR.puts dot_product_n(word_vector,word_vector)
+          word_vector.each { |x| STDERR.puts x if x < 0 }
+          raise "complex error"
+        end
+        sim += cos
       end
     end
     return sim / @predicted[clabel].size.to_f

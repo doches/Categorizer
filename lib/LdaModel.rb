@@ -7,8 +7,8 @@ class LdaModel < Model
     super
     
     @datapath = "data/lda/"
-    @legacy_model = Phi.new("/home/s0897549/model_lda_bnc/","model-final")
-    #@legacy_model = LDA.new("bunnocks",9999)
+    #@legacy_model = Phi.new("/home/s0897549/model_lda_bnc/","model-final")
+    @legacy_model = LDA.new("bunnocks",9999)
     
   end
   
