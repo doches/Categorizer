@@ -91,6 +91,15 @@ module Graph
     end
   end
   
+  class NamingBarPlot < BarPlot
+    def initialize(filenames,output)
+      @data = filenames.map { |filename| [Report::NamingData.new(filename),filename] }
+      super(output)
+      self.tmpdir += "/naming"
+      self.ylabel = "\"Proportion Correct\""
+    end
+  end
+  
   class NamingPlot < Plot
     def initialize(filenames,output)
       super(output)
