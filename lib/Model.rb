@@ -1,11 +1,14 @@
+# An abstract class for categorization models that provides some transparent caching
+# functionality, as well as a common interface for similarity.
 class Model
+  # Create a new abstract Model. Initalizes the label and vector caches.
   def initialize
     @last_label = [nil,nil]
     
     @cache = {}
   end
   
-  # lookup the vector for a word, first checking in our cache
+  # Lookup the vector for a word, first checking in our cache
   def cache(word)
     if @cache.keys.include?(word.to_sym)
       return @cache[word.to_sym]
@@ -16,15 +19,22 @@ class Model
   end
   
   # Return similarity (distance, measure, etc.) between a word (string) and a category (string, label)
+  #
+  # This is an abstract method and must be overridden by a subclass.
   def similarity(word,label)
     raise "Virtual method"
   end
   
-  # Get vector representation for a category (string, label)
+  # Get vector representation for a category label. 
+  #
+  # This is an abstract method and must be overridden by a
+  # subclass.
   def category_vector(label)
     raise "Virtual method"
   end
   
+  # Get the vector representation for a word via the cache. Returns the vector, 
+  # if it is non-null and greater than 1 (*should* handle all the legacy models); false otherwise
   def query(word)
     vec = cache(word)
     return (vec and vec.size > 1)
