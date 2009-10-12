@@ -4,7 +4,10 @@ require 'lib/Oracle'
 # reports produced by Naming.rb, Typicality.rb, and Generation.rb.
 # Right now these are only used by the classes in the Graph module.
 module Report
-  # Represents one result (e.g. line) from a Naming report
+  # Represents one result (e.g. line) from a Naming report.
+  # You probably don't want to instantiate this directly, as it's kind of useless
+  # (it's only a struct) -- used by NamingData to make the parsing function a 
+  # teeny bit prettier.
   class NamingResult
     attr_accessor :exemplar,:correct,:labels
     def initialize(exemplar,correct,categories)
@@ -16,6 +19,7 @@ module Report
   
   # Process a Naming report into meaningful results
   class NamingData
+    # An array of NamingResult objects, one per line
     attr_reader :results
     
     # Load a report from 'filename'
@@ -53,17 +57,24 @@ module Report
   end
   
   # Represents a typicality (correlation) file. 
-  # 
-  # File should consist of two columns of tab-delimited numbers,
-  # corresponding to generation frequency and category similarity
   class TypicalityData
-    attr_reader :filename, :correlation, :count
+    # The file represented by this object
+    attr_reader :filename
+    # The correlation coefficient computed by +regress+
+    attr_reader :correlation
+    # The number of items (lines) used to compute the #correlation
+    attr_reader :count
+    # Parse a Typicality report.
+    # 
+    # [filename] A file consist of two columns of tab-delimited numbers,
+    #            corresponding to generation frequency and category similarity
     def initialize(filename)
       @filename = filename
       @correlation = `cat #{filename} | ruby hacks/filter_typicality.rb | regress`.split("\n").pop.split(" ").shift
       @count = `cat #{filename} | wc -l`.strip.to_i
     end
     
+    # Alias for correlation
     alias value correlation
   end
   
@@ -75,8 +86,15 @@ module Report
   #
   # Categories should not appear multiple times.
   class GenerationData
-    attr_reader :filename, :categories, :average
+    # The file represented by the object
+    attr_reader :filename
+    # A hash mapping category labels to an array of exemplars
+    attr_reader :categories
+    # The average overlap between the generated exemplars and the Oracle.
+    attr_reader :average
     
+    # Load a Generation.rb report and compute the average overlap between
+    # the generated exemplars and those of the Oracle.
     def initialize(filename)
       oracle = Oracle.raw
 
@@ -100,10 +118,12 @@ module Report
       @average = @overlaps.values.inject(0) { |s,x| s += x.size } / @overlaps.size.to_f
     end
     
+    # How many categories were predicted?
     def size
       return @categories.size
     end
     
+    # Alias for average
     alias value average
   end
 end
