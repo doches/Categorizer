@@ -20,10 +20,12 @@ module Cluster
     end
     word_vector = NVector.to_na(word_vector)
     @predicted.keys.reject { |clabel| not clabel =~ /^#{label}\-[0-9]+$/ }.each do |clabel|
-      sims.push similarity_cluster(word_vector,clabel)
+      sim = similarity_cluster(word_vector,clabel)
+      STDERR.puts "sim_cluster(#{word},#{clabel}) = #{sim}" if @debug
+      sims.push sim
     end
     if sims.size <= 0
-#      STDERR.puts "No cluster-labels matching #{label} found, letting sim(#{word},#{label}) = 0" if @debug
+      STDERR.puts "No cluster-labels matching #{label} found, letting sim(#{word},#{label}) = 0" if @debug
       return 0.0
     else
       begin
@@ -56,7 +58,7 @@ module Cluster
   
   # Category vectors are the same as normal vectors
   def category_vector(word)
-    vector(word)
+    cache(word)
   end
   
   def query(word)
