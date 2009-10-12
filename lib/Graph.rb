@@ -1,10 +1,25 @@
 require 'lib/Report'
 
+# Produce GNUPlot graphs from raw Naming/Generation/Typicality data
 module Graph
+  # Abstract class from which data-specific plots inherit. Sets some
+  # default options for GNUPlot (such as terminal type and output) so
+  # as to unify resulting graphs.
+  #
+  # Could do with a bit more customization, so plots are even more 
+  # homogenous.
   class Plot
     attr_accessor :tmpdir,:tmpdir
     attr_reader :data
 
+    # Create a new Plot. 'output' is used to name the resulting file,
+    # regardless of term type (e.g. resulting graph will be in "output.<type>").
+    # GNUPlot variables can be accessed via has syntax, as in the example.
+    #
+    # Example usage (won't work, because by default Plot doesn't know about any data).
+    #   plot = Plot.new("foo")
+    #   plot.xrange = "[0:19]"
+    #   plot.render
     def initialize(output)
       @tmpdir = "reports"
       @output = output
@@ -14,9 +29,11 @@ module Graph
         "output" => "\"#{output}.eps\"",
         "xrange" => "[0:9]",
         "yrange" => "[0:1]"
-      }    
+      }
     end
-
+    
+    # Beautiful hack that lets you access GNUPlot options (terminal, size, output, xrange, etc.)
+    # via hash syntax.
     def method_missing(sym,*args,&blk)
       if sym.to_s =~ /^(.+)=$/
         @attribs[$1] = args[0]
@@ -26,12 +43,17 @@ module Graph
       return nil
     end
     
+    # Produce a .plt file, render the graph, and convert the resulting .eps into a more useful PDF.
     def render
       plt = self.to_plt.split("/").pop
       Dir.chdir(@tmpdir)
       `gnuplot #{plt} && epstopdf #{@output}.eps`
     end
     
+    protected
+    
+    # Write current attributes/data into a .plt file. Called by 'render'.
+    # 'custom_text' is added to the end of the file, after all attributes have been set. Add references to data files here.
     def to_plt(custom_text = "")
       file = "#{@tmpdir}/#{@output}.plt"
       fname = file
@@ -45,6 +67,8 @@ module Graph
     end
   end
   
+  # An abstract bar graph (e.g. a GNUPlot graph using "with boxes fs solid").
+  # Subclass to provide data.
   class BarPlot < Plot
     def initialize(output)
       super(output)
@@ -57,6 +81,7 @@ module Graph
       @data.each_with_index { |x,i| tics.push "\"#{x[1].split('/').pop.split('.').shift}\" #{i}" }
       self.xtics = "(#{tics.join(', ')}) rotate"
     end
+    
     def to_dat(force=false)
       file = @output + ".dat"
       
@@ -71,7 +96,12 @@ module Graph
     end
   end
   
+  # A plot of typicality (correlation) values.
   class TypicalityPlot < BarPlot
+    # Create a Typicality plot from an array of Typicality.rb produced files, and save the resulting graph in 'output'.
+    # [filenames]  Each file in 'filenames' should consist of two columns of numbers, one line per exemplar/category pair, with 
+    #              generation frequency in the first column and the predicted similarity between the category and exemplar in the second.
+    # [output]     The filename to use in producing the final graph (as well as any temporary or data files created therein).
     def initialize(filenames,output)
       @data = filenames.map { |filename| [Report::TypicalityData.new(filename),filename] }
       super(output)
@@ -81,7 +111,16 @@ module Graph
     end
   end
   
+  # A plot of generation values. Shows the average overlap between the n exemplars most similar to each category and the
+  # n exemplars most frequently generated (by humans) when shown that category label.
   class GenerationPlot < BarPlot
+    # Create a Generation plot from an array of Generation.rb produced files, and save the resulting graph in 'output'.
+    # [filenames] Each file in 'filenames' should be of the form:
+    #   
+    #               category1: word1, word2, word3...
+    #               category2: word4, word5, word6...
+    #               ...
+    # [output]    The filename to use in producing the final graph, as well as any temporary or data files created along the way.
     def initialize(filenames,output)
       @data = filenames.map { |filename| [Report::GenerationData.new(filename),filename] }
       super(output)
@@ -91,7 +130,15 @@ module Graph
     end
   end
   
+  # A plot of category naming values. Shows the proportion of exemplars labeled with the correct
+  # category label.
   class NamingBarPlot < BarPlot
+    # Create a Naming plot from an array of Naming.rb produced files, and save the resulting graph in 'output'.
+    # [filenames] Each file in 'filenames' should be of the form:
+    #
+    #               exemplar1 (correct_category): category1 (sim)  category2 (sim)  category3 (sim)...
+    #               exemplar2 ...
+    # [output]    Used to name the final graph and any data/temporary files produced along the way (i.e. output.eps, output.dat, output.pdf)
     def initialize(filenames,output)
       @data = filenames.map { |filename| [Report::NamingData.new(filename),filename] }
       super(output)
@@ -100,7 +147,19 @@ module Graph
     end
   end
   
+  # DEPRECATED
+  #
+  # A plot of category naming values. Shows the proportion of exemplars labeled with the correct
+  # category label in an n-best fashion. The resulting graph is a line graph where the value at 
+  # x=0 is the proportion of correctly labeled exemplars, x=1 is the proportion of exemplars for whom the 
+  # correct category label was either the most similar or second most similiar, x=2 most similar, second most, or third most, etc...
   class NamingPlot < Plot
+    # Create a Naming plot from an array of Naming.rb produced files, and save the resulting graph in 'output'.
+    # [filenames] Each file in 'filenames' should be of the form:
+    #
+    #               exemplar1 (correct_category): category1 (sim)  category2 (sim)  category3 (sim)...
+    #               exemplar2 ...
+    # [output]    Used to name the final graph and any data/temporary files produced along the way (i.e. output.eps, output.dat, output.pdf)
     def initialize(filenames,output)
       super(output)
       self.tmpdir += "/naming"
