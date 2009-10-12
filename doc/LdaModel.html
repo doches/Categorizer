@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: LdaModel</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./lib/LdaModel_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/LdaModel.rb">lib/LdaModel.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link"><a href="Model.html">Model</a></p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000017">::new</a></li>
+					
+					<li><a href="#M000018">#vector</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Graph.html">Graph</a></li>
+				
+					<li><a href="./Graph/BarPlot.html">Graph::BarPlot</a></li>
+				
+					<li><a href="./Graph/GenerationPlot.html">Graph::GenerationPlot</a></li>
+				
+					<li><a href="./Graph/NamingBarPlot.html">Graph::NamingBarPlot</a></li>
+				
+					<li><a href="./Graph/NamingPlot.html">Graph::NamingPlot</a></li>
+				
+					<li><a href="./Graph/Plot.html">Graph::Plot</a></li>
+				
+					<li><a href="./Graph/TypicalityPlot.html">Graph::TypicalityPlot</a></li>
+				
+					<li><a href="./Report.html">Report</a></li>
+				
+					<li><a href="./Report/GenerationData.html">Report::GenerationData</a></li>
+				
+					<li><a href="./Report/NamingData.html">Report::NamingData</a></li>
+				
+					<li><a href="./Report/NamingResult.html">Report::NamingResult</a></li>
+				
+					<li><a href="./Report/TypicalityData.html">Report::TypicalityData</a></li>
+				
+					<li><a href="./Baseline.html">Baseline</a></li>
+				
+					<li><a href="./Cluster.html">Cluster</a></li>
+				
+					<li><a href="./DepspaceBaselineModel.html">DepspaceBaselineModel</a></li>
+				
+					<li><a href="./DepspaceCluster3Model.html">DepspaceCluster3Model</a></li>
+				
+					<li><a href="./DepspaceClutoAggloModel.html">DepspaceClutoAggloModel</a></li>
+				
+					<li><a href="./DepspaceClutoBaggloModel.html">DepspaceClutoBaggloModel</a></li>
+				
+					<li><a href="./DepspaceClutoGraphModel.html">DepspaceClutoGraphModel</a></li>
+				
+					<li><a href="./DepspaceClutoRbModel.html">DepspaceClutoRbModel</a></li>
+				
+					<li><a href="./DepspaceClutoRbrModel.html">DepspaceClutoRbrModel</a></li>
+				
+					<li><a href="./DepspaceLabelBalapincModel.html">DepspaceLabelBalapincModel</a></li>
+				
+					<li><a href="./DepspaceLabelBalprecModel.html">DepspaceLabelBalprecModel</a></li>
+				
+					<li><a href="./DepspaceLabelCosineModel.html">DepspaceLabelCosineModel</a></li>
+				
+					<li><a href="./DepspaceLabelDegreeModel.html">DepspaceLabelDegreeModel</a></li>
+				
+					<li><a href="./DepspaceLabelLinModel.html">DepspaceLabelLinModel</a></li>
+				
+					<li><a href="./DepspaceModel.html">DepspaceModel</a></li>
+				
+					<li><a href="./Exemplar.html">Exemplar</a></li>
+				
+					<li><a href="./Label.html">Label</a></li>
+				
+					<li><a href="./LdaAutoclassModel.html">LdaAutoclassModel</a></li>
+				
+					<li><a href="./LdaBaselineModel.html">LdaBaselineModel</a></li>
+				
+					<li><a href="./LdaCluster3Model.html">LdaCluster3Model</a></li>
+				
+					<li><a href="./LdaClutoAggloModel.html">LdaClutoAggloModel</a></li>
+				
+					<li><a href="./LdaClutoBaggloModel.html">LdaClutoBaggloModel</a></li>
+				
+					<li><a href="./LdaClutoGraphModel.html">LdaClutoGraphModel</a></li>
+				
+					<li><a href="./LdaClutoRbModel.html">LdaClutoRbModel</a></li>
+				
+					<li><a href="./LdaClutoRbrModel.html">LdaClutoRbrModel</a></li>
+				
+					<li><a href="./LdaCwModel.html">LdaCwModel</a></li>
+				
+					<li><a href="./LdaLabelBalapincModel.html">LdaLabelBalapincModel</a></li>
+				
+					<li><a href="./LdaLabelBalprecModel.html">LdaLabelBalprecModel</a></li>
+				
+					<li><a href="./LdaLabelCosineModel.html">LdaLabelCosineModel</a></li>
+				
+					<li><a href="./LdaLabelDegreeModel.html">LdaLabelDegreeModel</a></li>
+				
+					<li><a href="./LdaLabelLinModel.html">LdaLabelLinModel</a></li>
+				
+					<li><a href="./LdaModel.html">LdaModel</a></li>
+				
+					<li><a href="./LsaAutoclassModel.html">LsaAutoclassModel</a></li>
+				
+					<li><a href="./LsaBaselineModel.html">LsaBaselineModel</a></li>
+				
+					<li><a href="./LsaCluster3Model.html">LsaCluster3Model</a></li>
+				
+					<li><a href="./LsaClutoAggloModel.html">LsaClutoAggloModel</a></li>
+				
+					<li><a href="./LsaClutoBaggloModel.html">LsaClutoBaggloModel</a></li>
+				
+					<li><a href="./LsaClutoGraphModel.html">LsaClutoGraphModel</a></li>
+				
+					<li><a href="./LsaClutoRbModel.html">LsaClutoRbModel</a></li>
+				
+					<li><a href="./LsaClutoRbrModel.html">LsaClutoRbrModel</a></li>
+				
+					<li><a href="./LsaCwModel.html">LsaCwModel</a></li>
+				
+					<li><a href="./LsaLabelBalapincModel.html">LsaLabelBalapincModel</a></li>
+				
+					<li><a href="./LsaLabelBalprecModel.html">LsaLabelBalprecModel</a></li>
+				
+					<li><a href="./LsaLabelCosineModel.html">LsaLabelCosineModel</a></li>
+				
+					<li><a href="./LsaLabelDegreeModel.html">LsaLabelDegreeModel</a></li>
+				
+					<li><a href="./LsaLabelLinModel.html">LsaLabelLinModel</a></li>
+				
+					<li><a href="./LsaModel.html">LsaModel</a></li>
+				
+					<li><a href="./Model.html">Model</a></li>
+				
+					<li><a href="./Models.html">Models</a></li>
+				
+					<li><a href="./Oracle.html">Oracle</a></li>
+				
+					<li><a href="./Regress.html">Regress</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">LdaModel</h1>
+
+		<div id="description">
+			<p>
+Wraps a legacy LDA model in a common interface.
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="Server">Server</a></dt>
+				
+				<dd class="description"><p>
+The default server to use (currently &#8220;bunnocks&#8221;).
+</p></dd>
+				
+			
+				<dt><a name="ModelPath">ModelPath</a></dt>
+				
+				<dd class="description"><p>
+The default model path to use (currently model_lda_bnc on DICE).
+</p></dd>
+				
+			
+				<dt><a name="ModelName">ModelName</a></dt>
+				
+				<dd class="description"><p>
+The default model name to use (currently &#8220;model-final&#8221;)
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="M000017"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(source=Server,name=ModelName)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Load an LDA model. If <tt>source</tt> is an existing directory it will load
+a Phi model, which loads the LDA space into memory; otherwise,
+<tt>source</tt> is assumed to be the hostname of a machine on which a Phi
+server is already running, and it loads an RPC version of the space which
+queries this server for vectors. <tt>name</tt> is only used in the former
+case, when loading a space directly.
+</p>
+<p>
+Using a remote server introduces some network latency, as well as (if too
+many clients are using the same server) extra lookup time. However, loading
+the LDA space into memory takes an inordinate amount of time, so you may
+save time loading once into a remote server and taking the hit with regard
+to network latency. YMMV.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/LdaModel.rb, line 24</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">source</span>=<span class="ruby-constant">Server</span>,<span class="ruby-identifier">name</span>=<span class="ruby-constant">ModelName</span>)
+    <span class="ruby-keyword kw">super</span>()
+    
+    <span class="ruby-ivar">@datapath</span> = <span class="ruby-value str">&quot;data/lda/&quot;</span>
+    <span class="ruby-ivar">@legacy_model</span> = <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">source</span>)
+      <span class="ruby-ivar">@legacy_model</span> = <span class="ruby-constant">Phi</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">ModelPath</span>,<span class="ruby-identifier">name</span>)
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-ivar">@legacy_model</span> = <span class="ruby-constant">LDA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">source</span>,<span class="ruby-value">9999</span>)
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="vector-method" class="method-detail ">
+				<a name="M000018"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">vector</span><span
+						class="method-args">(word)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the LDA-space vector (using topics as dimensions) for this word.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="vector-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/LdaModel.rb, line 37</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">vector</span>(<span class="ruby-identifier">word</span>)
+    <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@legacy_model</span>.<span class="ruby-identifier">vector</span>(<span class="ruby-identifier">word</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
