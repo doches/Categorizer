@@ -1,5 +1,8 @@
 require 'lib/Oracle'
 
+# The Report module provides wrapper objects that handle parsing the 
+# reports produced by Naming.rb, Typicality.rb, and Generation.rb.
+# Right now these are only used by the classes in the Graph module.
 module Report
   # Represents one result (e.g. line) from a Naming report
   class NamingResult
