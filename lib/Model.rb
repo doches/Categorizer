@@ -3,8 +3,6 @@
 class Model
   # Create a new abstract Model. Initalizes the label and vector caches.
   def initialize
-    @last_label = [nil,nil]
-    
     @cache = {}
   end
   
