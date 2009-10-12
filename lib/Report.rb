@@ -42,6 +42,11 @@ module Report
       scores.map! { |x| x / @results.size.to_f }
       return scores
     end
+    
+    # Return the proportion labeled correctly in 1 try
+    def value
+      scores[0]
+    end
   end
   
   # Represents a typicality (correlation) file. 
@@ -52,7 +57,7 @@ module Report
     attr_reader :filename, :correlation, :count
     def initialize(filename)
       @filename = filename
-      @correlation = `cat #{filename} | regress`.split("\n").pop.split(" ").shift
+      @correlation = `cat #{filename} | ruby hacks/filter_typicality.rb | regress`.split("\n").pop.split(" ").shift
       @count = `cat #{filename} | wc -l`.strip.to_i
     end
     
