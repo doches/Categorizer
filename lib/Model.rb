@@ -26,7 +26,8 @@ class Model
   end
   
   def query(word)
-    return cache(word).size > 1
+    vec = cache(word)
+    return (vec and vec.size > 1)
   end
   
   # Check and see if a word has a corresponding vector, coincidentally putting it into
