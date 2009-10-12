@@ -16,6 +16,7 @@ end
 def dot_product_n(a,b)
   dot = a*b
   if dot < 0
+#    raise "Integer overflow in dot_product_n"
     return dot_product_e(a,b)
   else
     return dot
