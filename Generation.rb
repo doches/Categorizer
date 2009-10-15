@@ -2,14 +2,8 @@ require 'progressbar'
 require 'lib/Oracle'
 require 'lib/Models'
 
-model = Models.load(ARGV[0].to_sym)
-exemplars = Oracle.exemplars()
-labels = Oracle.categories()
-
-progress = ProgressBar.new("Generation",labels.size)
-out = File.open("results/generation/"+Models.output_path(ARGV[0].to_sym),"w")
-
-labels.each do |label|
+def generate_exemplars_for_category(label,filepath)
+  out = File.open(filepath,"w")
   best = []
   best_ex = []
   iprogress = ProgressBar.new(label,exemplars.size)
@@ -30,15 +24,19 @@ labels.each do |label|
       best = best[0..19]
     end
    end
-#   STDERR.puts "#{label}: " + best[0..9].map { |x| x[0] }.join("\t") if i % 1000 == 0
-   iprogress.inc
   end
-  iprogress.finish
-#  print "#{label}: "
-#  puts best.map { |x| "#{x[0]}" }.join(", ")
   out.print "#{label}: "
   out.puts best.map { |x| "#{x[0]}" }.join(", ")
-  progress.inc
+  out.close
 end
-progress.finish
-out.close
+
+model_sym = ARGV[0].to_sym
+label = ARGV[1]
+
+model = Models.load(model_sym)
+exemplars = Oracle.exemplars()
+
+path = "results/generation/"+Models.output_path(model_sym)
+labels.each do |label|
+  generate_exemplars_for_category(label,path)
+end
