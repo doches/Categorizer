@@ -36,11 +36,23 @@ module Label
     if @last_label[1] and @last_label[1].uniq.size > 1 and vec and vec.uniq.size > 1
       sim = @last_label[1].entails(Concept.new(cache(word)),@method)
       if sim.nan?
+        STDERR.puts "similarity(#{word},#{label}) = NaN, letting sim = 0.0"
         return 0.0
       else
         return sim
       end
     else
+      if @last_label[1].nil?
+        STDERR.puts "#{label} has nil vector"
+      elsif @last_label[1].uniq.size <= 1
+        STDERR.puts "#{label} has zero vector"
+      elsif vec.nil?
+        STDERR.puts "#{word} has nil vector"
+      elsif vec.uniq.size <= 1
+        STDERR.puts "#{word} has zero vector"
+      else
+        raise "Avoided sim() because of bad vector when I shouldn't have"
+      end
       return 0.0
     end
   end
