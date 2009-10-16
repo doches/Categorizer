@@ -1,6 +1,7 @@
 require 'lib/Model'
 require 'legacy/lda'
 require 'legacy/lda_server'
+require 'remotehash'
 
 # Wraps a legacy LDA model in a common interface.
 class LdaModel < Model
@@ -26,6 +27,10 @@ class LdaModel < Model
     
     @datapath = "data/lda/"
     @legacy_model = nil
+    if true # hack to use RemoteHash. TODO: integrate nicely.
+      @legacy_model = RemoteHash.new("mcfadden",9998)
+      return
+    end
     if File.exist?(source)
       @legacy_model = Phi.new(ModelPath,name)
     else
@@ -35,6 +40,7 @@ class LdaModel < Model
   
   # Get the LDA-space vector (using topics as dimensions) for this word.
   def vector(word)
-    return @legacy_model.vector(word)
+    return @legacy_model[word]
+    #return @legacy_model.vector(word)
   end
 end
