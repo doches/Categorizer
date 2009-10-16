@@ -6,6 +6,7 @@ class Phi
 	def initialize(model_path,name,cache_limit=100)
 		# Build wordmap
 		@words = {}
+		STDERR.print "Reading wordmap..."
 		fin = File.open(File.join(model_path,"wordmap.txt"),"r")
 		last = 0
 		fin.each_line do |line|
@@ -13,8 +14,10 @@ class Phi
 		  @words[word.to_s] = index.to_i
 		end
 		fin.close()
+		STDERR.puts "OK"
 		
 	  # Build P(w_z) dist.
+	  STDERR.print "Reading vectors"
 	  @topics = {} # { w_i => [z_0, z_1, z_2] }
 		fin = File.open(File.join(model_path,"#{name}.phi"),"r")
 		last = 0
@@ -26,8 +29,10 @@ class Phi
 		    (0..probs.size).each { |i| @topics[i] = [] }
 		  end
 		  probs.each_with_index { |prob,i| @topics[i].push prob.to_f }
+		  STDERR.print "."
 		end
 		fin.close()
+		STDERR.puts "OK"
 		
 		@vocab_size = @topics[0].size
 		
@@ -39,24 +44,37 @@ class Phi
 	
 	def vector(word)
 	  word = word.upcase.to_s
-	  if @cache[word]
-	    @hits += 1
-	    return @cache[word]
+	  if @cache_limit > 0
+  	  if @cache[word]
+	      @hits += 1
+	      return @cache[word]
+  	  else
+	      @misses += 1
+  	    index = @words[word]
+	      if index.nil?
+	        # We didn't find the word, so return a vector of all zeroes (possibly we could do something
+	        # more informative here, but all my later code knows to reject all-zero vectors, so this ought
+	        # to be ok for a while. This iteration, anyway.
+	        #
+	        # Sigh.
+	        return Array.new(@vocab_size,0.0)
+	      end
+	      if @cache.size > @cache_limit
+	        @cache.delete(@cache.keys[rand*@cache.keys.size])
+  	    end
+	      @cache[word] = @topics[index]
+	      return @cache[word]
+	    end
 	  else
-	    @misses += 1
-  	  index = @words[word]
+	    index = @words[word]
 	    if index.nil?
-	      # Word not found; do something reasonable.
 	      return Array.new(@vocab_size,0.0)
+	    else
+	      return @topics[index]
 	    end
-	    if @cache.size > @cache_limit
-	      @cache.delete(@cache.keys[rand*@cache.keys.size])
-	    end
-	    @cache[word] = @topics[index]
-	    return @cache[word]
 	  end
 	end
-end
+end 
 
 def usage()
   STDERR.puts "Usage: ruby #{__FILE__} [OPTIONS]"
