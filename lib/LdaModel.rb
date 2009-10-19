@@ -29,6 +29,7 @@ class LdaModel < Model
     @legacy_model = nil
     if true # hack to use RemoteHash. TODO: integrate nicely.
       @legacy_model = RemoteHash.new("mcfadden",9998)
+      @legacy_model.caching=false
       return
     end
     if File.exist?(source)

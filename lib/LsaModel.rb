@@ -4,7 +4,7 @@ require 'legacy/infomap'
 # Wraps the legacy InfoMap model in a common interface.
 class LsaModel < Model
   # The default path for loading the InfoMap model. Currently +data/lsa+ on DICE.
-  ModelPath = "data/lsa"
+  ModelPath = "data/lsa/"
   # The default model to load, currently "bnc_az"
   ModelName = "bnc_az"
   

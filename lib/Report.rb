@@ -103,11 +103,12 @@ module Report
       empty = []
       IO.foreach(filename) do |line|
         label,exemplars = *line.strip.split(": ")
-        exemplars = exemplars.split(", ")
-        @categories[label] = exemplars
+        exemplars = exemplars.nil? ? [] : exemplars.split(", ")
+        @categories[label] = exemplars if not exemplars.size == 0
         empty.push label if exemplars.nil? or exemplars.size <= 1
       end
-      raise "No exemplars generated for #{empty.join(', ')}" if empty.size > 1
+      
+#      raise "No exemplars generated for #{empty.join(', ')}" if empty.size > 1
 
       @overlaps = {}
       @categories.each_pair do |category,exemplars|

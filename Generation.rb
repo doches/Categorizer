@@ -7,6 +7,8 @@ def generate_exemplars_for_category(label,filepath)
   best = []
   best_ex = []
   iprogress = ProgressBar.new(label,exemplars.size)
+  
+  begin
   exemplars.each_with_index do |exemplar,i|
    if exemplar.word =~ /^[a-zA-Z0-9]+$/
     sim = model.similarity(exemplar.word,label)
@@ -24,6 +26,9 @@ def generate_exemplars_for_category(label,filepath)
       best = best[0..19]
     end
    end
+  end
+  rescue RuntimeError
+    STDERR.puts "No cluster labels found, dropping category"
   end
   out.print "#{label}: "
   out.puts best.map { |x| "#{x[0]}" }.join(", ")

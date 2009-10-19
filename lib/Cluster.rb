@@ -32,7 +32,7 @@ module Cluster
   def init_cluster(filename)
     raise "no datapath" if @datapath.nil?
     @predicted = YAML.load_file(@datapath + filename)
-    @debug = true
+    @debug = false 
   end
 
   # Compute the similarity between a word and a category label. Basically, this method
@@ -52,19 +52,20 @@ module Cluster
     sims = []
     word_vector = cache(word)
     if not word_vector or word_vector.size <= 1 or word_vector.uniq.size <= 1
-      #STDERR.puts "No vector for '#{word}', letting sim(#{word},#{label}) = 0" if @debug
+      STDERR.puts "No vector for '#{word}', letting sim(#{word},#{label}) = 0" if @debug
       return 0.0
     end
     word_vector = NVector.to_na(word_vector)
     @predicted.keys.reject { |clabel| not clabel =~ /^#{label}\-[0-9]+$/ }.each do |clabel|
       sim = similarity_cluster(word_vector,clabel)
-      #STDERR.puts "sim_cluster(#{word},#{clabel}) = #{sim}" if @debug
+      STDERR.puts "sim_cluster(#{word},#{clabel}) = #{sim}" if @debug and false
       sims.push sim
     end
     if sims.size <= 0
-      #STDERR.puts "No cluster-labels matching #{label} found, letting sim(#{word},#{label}) = 0" if @debug
-      raise "no cluster-labels matching #{label} found" if @debug
-      return 0.0
+      STDERR.puts "No cluster-labels matching #{label} found, letting sim(#{word},#{label}) = 0" if @debug
+#      STDERR.puts @predicted.keys.inspect
+      raise "no cluster-labels"
+      return rand
     else
       begin
         sims.reject! { |x| x.nan? } 
@@ -89,7 +90,7 @@ module Cluster
     @predicted[clabel].each do |exemplar|
       exemplar_vector = cache(exemplar)
       if not exemplar_vector or exemplar_vector.size <= 1
-        #STDERR.puts "No vector for '#{exemplar}', ignoring in sim_cluster(<something>,#{clabel})" if @debug
+        STDERR.puts "No vector for '#{exemplar}', ignoring in sim_cluster(<something>,#{clabel})" if @debug
       else
         exemplar_vector = NVector.to_na(exemplar_vector)
         sim += cosine(word_vector,exemplar_vector)

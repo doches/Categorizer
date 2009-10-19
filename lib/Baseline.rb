@@ -41,7 +41,7 @@ module Baseline
     sims = []
     word_vector = cache(word)
     if not word_vector or word_vector.size <= 1 or word_vector.uniq.size <= 1
-      STDERR.puts "No vector for '#{word}', letting sim(#{word},#{label}) = 0" if @debug
+      #STDERR.puts "No vector for '#{word}', letting sim(#{word},#{label}) = 0" if @debug
       return 0.0
     end
     word_vector = NVector.to_na(word_vector)
@@ -83,7 +83,7 @@ module Baseline
           word_vector.each { |x| STDERR.puts x if x < 0 }
           raise "complex error"
         end
-        sim += cos
+        sim += cos if not cos.nan?
       end
     end
     return sim / @predicted[clabel].size.to_f
