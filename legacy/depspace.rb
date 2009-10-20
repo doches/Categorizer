@@ -24,18 +24,13 @@ class DependencySpace
     @map = {}
     pbar = ProgressBar.new("Loading",lines.size) if @progress
     @scale ||= 100.0
-    c = 0
     lines.each do |line|
       word,dims = *line.split(": ")
       @map[word] = dims.split(" ").map { |x| x.to_f }#/@scale }
       pbar.inc if @progress
-      c += 1
-      if c % 100 == 0
-        #puts "#{word} = #{dims.split(' ')[0..4].join(',')}..."
-      end
     end
     pbar.finish if @progress
-    STDERR.puts "#{@map.keys.size} vectors loaded"
+    STDERR.puts "#{@map.keys.size} vectors loaded" if @progress
   end
   
   def vector(word)

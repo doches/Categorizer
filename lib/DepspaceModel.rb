@@ -1,6 +1,6 @@
 require 'lib/Model'
 require 'legacy/depspace'
-#require 'remotehash'
+require 'remotehash'
 
 class DepspaceModel < Model
   def initialize
