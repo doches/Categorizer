@@ -1,4 +1,5 @@
 require 'lib/Oracle'
+require 'lib/Regress'
 
 # The Report module provides wrapper objects that handle parsing the 
 # reports produced by Naming.rb, Typicality.rb, and Generation.rb.
@@ -64,14 +65,21 @@ module Report
     attr_reader :correlation
     # The number of items (lines) used to compute the #correlation
     attr_reader :count
+    # The Regress object used to compute the correlation (contains additional statistics)
+    attr_reader :regress
+    
     # Parse a Typicality report.
     # 
     # [filename] A file consist of two columns of tab-delimited numbers,
     #            corresponding to generation frequency and category similarity
     def initialize(filename)
       @filename = filename
-      @correlation = `cat #{filename} | ruby hacks/filter_typicality.rb | regress`.split("\n").pop.split(" ").shift
-      @count = `cat #{filename} | wc -l`.strip.to_i
+      data = `cat #{filename}`.split("\n").map { |line| line.strip.split("\t").map { |i| i.to_f } }.reject { |pair| pair[1] == 0.0 }
+      @regress = Regress.new(data)
+      @correlation = @regress.r
+      @count = @regress.num_cases
+#      @correlation = `cat #{filename} | ruby hacks/filter_typicality.rb | regress`.split("\n").pop.split(" ").shift
+#      @count = `cat #{filename} | wc -l`.strip.to_i
     end
     
     # Alias for correlation

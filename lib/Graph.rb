@@ -46,8 +46,10 @@ module Graph
     # Produce a .plt file, render the graph, and convert the resulting .eps into a more useful PDF.
     def render
       plt = self.to_plt.split("/").pop
+      old_dir = Dir.getwd
       Dir.chdir(@tmpdir)
       `gnuplot #{plt} && epstopdf #{@output}.eps`
+      Dir.chdir(old_dir)
     end
     
     protected
@@ -108,6 +110,19 @@ module Graph
       self.tmpdir += "/typicality"
       self.yrange = "[0:0.5]"
       self.ylabel = "\"Correlation between similarity/generation frequency\""
+    end
+    
+    # Get the p-value for each pair of correlations (via Regress). Has no effect on the graph produced, but 
+    # this is usually the kind of thing you might want to talk about in the caption (for instance).
+    def significance
+      pairs = data.map { |f| [f[1].split("/").pop.split(".").shift,f[0].regress] }
+      sigs = []
+      for i in (0..pairs.size-2)
+        for j in (i+1..pairs.size-1)
+          sigs.push [pairs[i][0],pairs[j][0],Regress.diff_sig(pairs[i][1],pairs[j][1])]
+        end
+      end
+      return sigs
     end
   end
   

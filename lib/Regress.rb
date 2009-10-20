@@ -77,6 +77,17 @@ class Regress
     process(array_data)
   end
   
+  # Test whether the difference between two correlation coefficients is 
+  # significant. From http://www.fon.hum.uva.nl/Service/Statistics/Two_Correlations.html
+  # 
+  # r1 and r2 should be Regress objects
+  def Regress.diff_sig(r1,r2)
+    z_a = 0.5 * Math.log( (1.0+r1.r) / (1-r1.r) )
+    z_b = 0.5 * Math.log( (1.0+r2.r) / (1-r2.r) )
+    z = (z_a - z_b) / Math.sqrt(1.0/(r1.num_cases-3) + 1.0/(r2.num_cases-3))
+    return Statistics2.normalx__x(z)
+  end
+  
   private
   
   # Process regress output in the form of an array of strings (one line per 
@@ -111,16 +122,5 @@ class Regress
     @se_est = vars[2].to_f
     @f = vars[3].to_f
     @prob = vars[4].to_f
-  end
-  
-  # Test whether the difference between two correlation coefficients is 
-  # significant. From http://www.fon.hum.uva.nl/Service/Statistics/Two_Correlations.html
-  # 
-  # r1 and r2 should be Regress objects
-  def Regress.diff_sig(r1,r2)
-    z_a = 0.5 * Math.log( (1.0+r1.r) / (1-r1.r) )
-    z_b = 0.5 * Math.log( (1.0+r2.r) / (1-r2.r) )
-    z = (z_a - z_b) / Math.sqrt(1.0/(r1.num_cases-3) + 1.0/(r2.num_cases-3))
-    return Statistics2.normalx__x(z)
   end
 end
