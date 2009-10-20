@@ -1,0 +1,5 @@
+= Categorizer
+==== Tools for Natural Language Categorization
+
+You're not interested in this. No, really. This isn't a public project, it's my doctoral thesis -- I'm
+merely using github as a nice central RCS.
