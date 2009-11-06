@@ -11,10 +11,21 @@ require 'lib/Exemplar'
 # to oracle data only require a single loading of the file.
 class Oracle
   @@yaml = nil
+  @@mcrae = nil
   
   # Load +data/categories.yaml+ if we haven't done so already.
   def Oracle.init
     @@yaml = YAML.load_file("data/categories.yaml") if not @@yaml
+  end
+  
+  def Oracle.init_mcrae
+    @@mcrae = YAML.load_file("data/mcrae_categories.yaml") if not @@mcrae
+  end
+  
+  # Get raw hashmap for mcrae categories
+  def Oracle.mcrae_raw
+    Oracle.init_mcrae
+    @@mcrae
   end
   
   # Get a hashmap of category labels => exemplar lists (Arrays)
@@ -35,9 +46,25 @@ class Oracle
     return exemplars
   end
   
+  def Oracle.mcrae_exemplars
+    Oracle.init_mcrae
+    exemplars = []
+    @@mcrae.each_pair do |category,list|
+      list.each_pair do |word,typ|
+        exemplars.push Exemplar.new(word,category,typ)
+      end
+    end
+    return exemplars
+  end
+  
   # Get a list of category labels
   def Oracle.categories
     Oracle.init
     return @@yaml.keys
+  end
+  
+  def Oracle.mcrae_categories
+    Oracle.init_mcrae
+    return @@mcrae.keys
   end
 end

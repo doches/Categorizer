@@ -3,8 +3,10 @@ require 'lib/Oracle'
 require 'lib/Models'
 
 model = Models.load(ARGV[0].to_sym)
-exemplars = Oracle.exemplars()
-labels = Oracle.categories()
+mcrae = ARGV.include?("--mcrae")
+ARGV.reject! { |x| x == "--mcrae" }
+exemplars = mcrae ? Oracle.mcrae_exemplars() : Oracle.exemplars()
+labels = mcrae ? Oracle.mcrae_categories() : Oracle.categories
 
 progress = ProgressBar.new("Typicality",exemplars.size)
 counts = [0,0]

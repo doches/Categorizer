@@ -126,4 +126,20 @@ TXT
     rb = Regress.new(b)
     assert_in_delta 0.487,Regress.diff_sig(ra,rb),0.001
   end
+  
+  def test_convert_to_ranks
+    data = [ [:a,0.8],[:b,1.2],[:c,1.2],[:d,2.3],[:e,18]]
+    ranks = Regress.convert_to_ranks(data)
+    assert_equal ranks[:b],ranks[:c],"Items with the same score should have the same rank"
+    assert_operator ranks[:a], :<, ranks[:b]
+    assert_operator ranks[:a], :<, ranks[:d]
+  end
+  
+  def test_pearson
+    a = [ [:a,0.8],[:b,1.2],[:c,1.2],[:d,2.3],[:e,18]]
+    b = [ [:b,0.7],[:a,1.1],[:c,2.3],[:d,2.3],[:e,18]]
+    data = a.map { |pair| [pair[1],b.reject { |m| m[0] != pair[0]}[0][1]] }
+    p Regress.new(data).r
+    p Regress.pearson(a,b)
+  end
 end

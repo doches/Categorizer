@@ -2,9 +2,12 @@ require 'progressbar'
 require 'lib/Oracle'
 require 'lib/Models'
 
+mcrae = ARGV.include?("--mcrae")
+ARGV.reject! { |x| x == "--mcrae" }
+
 model = Models.load(ARGV[0].to_sym)
-exemplars = Oracle.exemplars()
-labels = Oracle.categories()
+exemplars = mcrae ? Oracle.mcrae_exemplars() : Oracle.exemplars()
+labels = mcrae ? Oracle.mcrae_categories() : Oracle.categories
 
 progress = ProgressBar.new("Naming",exemplars.size)
 out = File.open("results/naming/"+Models.output_path(ARGV[0].to_sym),"w")
@@ -16,7 +19,7 @@ exemplars.each do |exemplar|
       ranks = ranks.sort { |a,b| b[1] <=> a[1] }
     rescue
       p ranks
-      exit
+      raise $!
     end
 
     out.print "#{exemplar.word} (#{exemplar.category}): "

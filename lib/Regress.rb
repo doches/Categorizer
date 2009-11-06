@@ -88,7 +88,59 @@ class Regress
     return Statistics2.normalx__x(z)
   end
   
+  # Get the Pearson product-moment correlation (Pearson's r) between two sets. +a+ and +b+
+  # should be arrays of the form, with the same items sorted by score.
+  #
+  #   [ ["item1",score1], ["item2",score2] ...]
+  def Regress.pearson(ha,hb)
+    raise "Sets must be the same size" if ha.size != hb.size # sanity check
+    ha = Regress.convert_to_ranks(ha)
+    hb = Regress.convert_to_ranks(hb)
+    # equation is:
+    #
+    # r = (n(a) - b*c)/(sqrt(n*d-b**2)*sqrt(n*e-c**2))
+    # 
+    n = ha.size
+    a = ha.keys.inject(0) { |sum,item| sum += ha[item]*hb[item] }
+    b = ha.keys.inject(0) { |sum,item| sum += ha[item] }
+    c = hb.keys.inject(0) { |sum,item| sum += hb[item] }
+    d = ha.keys.inject(0) { |sum,item| sum += ha[item]**2 }
+    e = hb.keys.inject(0) { |sum,item| sum += hb[item]**2 }
+    r = (n*a - b*c).to_f/( (n*d - b**2)**0.5 * (n*e - c**2)**0.5 )
+    return r
+  end
+  
   private
+  
+  # Convert a set (formatted as in Regress#pearson) from scores to ranks. Called by Regress#pearson.
+  #
+  # This method is hideously ineffiecient, so much so that I'm (frankly) embarrassed to put my name on it...
+  def Regress.convert_to_ranks(set)
+    skip = []
+    for i in (0..set.size-1)
+      if skip.include?(i)
+        skip.delete(i)
+      else
+        rank = i
+        j = i+1
+        count = 1
+        while j < set.size and set[j][1] == set[i][1]
+          rank += j
+          j += 1
+          count += 1
+        end
+        skip = []
+        for y in (i..j-1)
+          set[y][1] = rank/count.to_f
+          skip.push y
+        end
+      end
+    end
+    set.map! { |pair| [pair[0],pair[1] + 1] }
+    hash = {}
+    set.each { |pair| hash[pair[0]] = pair[1] }
+    return hash
+  end
   
   # Process regress output in the form of an array of strings (one line per 
   # string). Exceedingly ugly method...
