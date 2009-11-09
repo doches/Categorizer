@@ -146,7 +146,11 @@ class Regress
   # string). Exceedingly ugly method...
   def process(array)
     # "Analysis for ..."
+    begin
     words = array.shift.split(" ")
+    rescue NoMethodError
+      raise "Invalid input for Regress"
+    end
     @num_cases = words[2].to_i
     @num_variables = words[5].to_i
     # headers
