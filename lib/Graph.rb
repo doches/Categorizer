@@ -2,13 +2,31 @@ require 'lib/Report'
 
 # Produce GNUPlot graphs from raw Naming/Generation/Typicality data
 module Graph
+  # An object that treats missingmethod calls as accesses on a hash @attrib
+  class HashObject
+    def initialize
+      @attribs = {}
+    end
+    
+    # Beautiful hack that lets you access GNUPlot options (terminal, size, output, xrange, etc.)
+    # via hash syntax.
+    def method_missing(sym,*args,&blk)
+      if sym.to_s =~ /^(.+)=$/
+        @attribs[$1] = args[0]
+      elsif @attribs.include?(sym.to_s)
+        return @attribs[sym.to_s]
+      end
+      return nil
+    end  
+  end
+  
   # Abstract class from which data-specific plots inherit. Sets some
   # default options for GNUPlot (such as terminal type and output) so
   # as to unify resulting graphs.
   #
   # Could do with a bit more customization, so plots are even more 
   # homogenous.
-  class Plot
+  class Plot < HashObject
     attr_accessor :tmpdir,:tmpdir
     attr_reader :data
 
@@ -21,6 +39,7 @@ module Graph
     #   plot.xrange = "[0:19]"
     #   plot.render
     def initialize(output)
+      super()
       @tmpdir = "reports"
       @output = output
       @attribs = {
@@ -30,17 +49,6 @@ module Graph
         "xrange" => "[0:9]",
         "yrange" => "[0:1]"
       }
-    end
-    
-    # Beautiful hack that lets you access GNUPlot options (terminal, size, output, xrange, etc.)
-    # via hash syntax.
-    def method_missing(sym,*args,&blk)
-      if sym.to_s =~ /^(.+)=$/
-        @attribs[$1] = args[0]
-      elsif @attribs.include?(sym.to_s)
-        return @attribs[sym.to_s]
-      end
-      return nil
     end
     
     # Produce a .plt file, render the graph, and convert the resulting .eps into a more useful PDF.
@@ -64,6 +72,59 @@ module Graph
         file.puts "set #{key} #{value}"
       end
       file.puts custom_text
+      file.close
+      return fname
+    end
+  end
+  
+  # Generates pretty combined graphs for typicality rating + category naming.
+  # Requires bargraph.pl, a scriptable layer over GNUPlot.
+  #
+  # +output+ is the filename to use for the final graph (and all temporary files);
+  # +models+ should be a hash of Models#sym_to_class formatted model names => x-axis labels (short names) to use for input
+  class CombinedPlot < HashObject
+    attr_accessor :tmpdir
+    attr_reader :data
+    
+    def initialize(output,models)
+      @data = models
+      @tmpdir = "reports"
+      @attribs = {
+        "colors" => "black,grey5",
+        "yformat" => "%g",
+        "max" => 1,
+        "extraops" => "set y2range [0:1];set y2tics autofreq;set ylabel \"Proportion correct\";set y2label \"Average correlation\""
+      }
+      @output = output
+    end
+    
+    def render(pdf=true)
+      old_dir = Dir.getwd
+      tempfile = self.to_bar
+      Dir.chdir(@tmpdir)
+      if pdf
+        `bargraph.pl #{tempfile} > #{@output}.eps && epstopdf #{@output}.eps && rm #{@output}.eps`
+      else
+        `bargraph.pl #{tempfile} > #{@output}.eps`
+      end
+      Dir.chdir(old_dir)
+    end
+    
+    def to_bar
+      fname = "#{@output}.bar"
+      file = File.join(@tmpdir,fname)
+      file = File.open(file,"w")
+      file.puts "=cluster;Category Naming;Typicality Ratings"
+      @attribs.sort.each do |key,value|
+        file.puts "#{key}=#{value}"
+      end
+      file.puts "=table"
+      # Data
+      @data.sort.each do |model,key|
+        naming = Report::NamingData.new(File.join("results","naming",model+".report"))
+        typicality = Report::TypicalityData.new(File.join("results","typicality",model+".report"))
+        file.puts [key,naming.value,typicality.value].join("\t")
+      end
       file.close
       return fname
     end

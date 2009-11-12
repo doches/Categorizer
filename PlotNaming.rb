@@ -3,8 +3,10 @@ require 'lib/Report'
 
 cats = {}
 
+cosine = ARGV.include?("--cosine") ? "Cosine" : ""
+
 Dir.foreach("results/naming/") do |file|
-  if file =~ /(Lsa|Lda|Depspace|Mcrae)(Cluster3|Cluto|Autoclass|Baseline|Label|Cw)Cosine\.report$/
+  if file =~ /(Lsa|Lda|Depspace|Mcrae|McraeLsa|McraeLda|McraeDepspace)(Cluster3|Cluto|Autoclass|Baseline|Label|Cw)#{cosine}\.report$/
     if `cat results/naming/#{file} | wc -l`.strip.to_i > 0
       cats[$2] ||= []
       cats[$2].push "results/naming/"+file

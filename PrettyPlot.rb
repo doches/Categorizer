@@ -3,14 +3,17 @@
 require 'lib/Graph'
 
 input = {
-#  "McraeLsaClutoRb" => "Top-Down",
-#  "McraeLsaClutoAgglo" => "Bottom-Up",
-#  "McraeLsaClutoGraph" => "Graph",
-  "McraeBaselineCosine" => "McRae",
-  "LsaBaselineCosine" => "LSA",
-  "LdaBaselineCosine" => "LDA",
-  "DepspaceBaselineCosine" => "Depspace"
+  "McraeDepspaceClutoRb" => "Top-Down",
+  "McraeDepspaceClutoAgglo" => "Bottom-Up",
+  "McraeDepspaceClutoGraph" => "Graph",
+  "DepspaceBaselineCosine" => "Baseline",
+#  "LsaBaselineCosine" => "LSA",
+#  "LdaBaselineCosine" => "LDA",
+#  "DepspaceBaselineCosine" => "Depspace"
 }
 
-graph = Graph::CombinedPlot.new("McraeBaseline",input)
+output = "McraeDepspaceCluto"
+
+graph = Graph::CombinedPlot.new(output,input)
 graph.render
+`evince reports/#{output}.pdf` if ARGV.include?("--view") or ARGV.include?("-v")
