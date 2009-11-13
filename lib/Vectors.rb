@@ -6,7 +6,9 @@ module Vector
   end
   
   class SparseVector < Vector
-    def initialize(string)
+    attr_reader :size
+    
+    def initialize(string,size)
       elements = string.split(" ") 
       raise ArgumentError.new("SparseVector.new expects a string of index-value pairs") if not elements.size % 2 == 0
       @values = {}
@@ -19,6 +21,22 @@ module Vector
           last_index = nil
         end
       end
+      @size = size
+    end
+    
+    def each(&blk)
+      (0..@size-1).each { |i| blk.call(self.[](i)) }
+    end
+    
+    def each_with_index(&blk)
+      (0..@size-1).each { |i| blk.call(self.[](i),i) }
+    end
+    
+    def join(tween)
+      str = ""
+      array = []
+      self.each { |v| array.push v }
+      return array.join(tween)
     end
     
     def [](index)
@@ -41,11 +59,11 @@ module Vector
     
     def initialize(filename)
       super
-      
+      @size = @file.shift.to_i
       rows = @file.map { |line| line.split(" ",2) }
       @data = {}
       rows.each do |pair|
-        @data[pair[0]] = SparseVector.new(pair[1])
+        @data[pair[0]] = SparseVector.new(pair[1],@size)
       end
     end
     
