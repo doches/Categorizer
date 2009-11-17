@@ -5,6 +5,10 @@ class Mcrae
     @data = Vector::SparseVectorFile.new("/home/s0897549/Categorizer/data/mcrae/mcrae_sparse.vectors").data
   end
   
+  def vector(word)
+    return @data[word]
+  end
+  
   def each_pair(&blk)
     @data.each_pair do |key,value|
       blk.call(key,value)
