@@ -1,6 +1,6 @@
 require 'lib/Oracle'
 require 'lib/Model'
-require 'lib/CosineIndex'
+require 'lib/Cosine'
 
 
 # A mix-in abstracting away the mechanics of a baseline (or Oracle) model.
