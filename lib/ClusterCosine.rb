@@ -1,5 +1,5 @@
 require 'lib/Model'
-require 'lib/CosineIndex'
+require 'lib/Cosine'
 
 # A mix-in abstracting away the mechanics of a categorization model based on
 # some external clustering information. Differs from a Baseline model in that,
