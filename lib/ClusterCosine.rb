@@ -65,6 +65,7 @@ module ClusterCosine
         return 0.0
       else
         begin
+#          sims.reject! { |x| x.nan? }
           return sims.sort { |a,b| b <=> a }[0] || 0.0
         rescue
           STDERR.puts word
@@ -93,6 +94,13 @@ module ClusterCosine
         sim += @cosines.distance(word,exemplar)
         count += 1
       end
+    end
+    if count == 0
+      STDERR.puts word
+      STDERR.puts clabel
+      STDERR.puts ": " + @predicted[clabel].inspect
+      STDERR.puts @cosines.words.inspect
+      raise "invalid category cluster"
     end
     return sim / count.to_f
   end

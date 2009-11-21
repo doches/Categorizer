@@ -45,6 +45,9 @@ module BaselineCosine
   def similarity(word,label)
     if @cosines.include?(word)
       sim = similarity_cluster(word,label)
+    elsif word.include?("_")
+      word = word.split("_")[0]
+      sim = similarity_cluster(word,label)
     else
       STDERR.puts "\'#{word}\' not in list of pre-computed cosines, sim(#{word},#{label}) = 0" if @debug
       sim = 0.0

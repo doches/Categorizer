@@ -58,6 +58,7 @@ module Graph
       Dir.chdir(@tmpdir)
       `gnuplot #{plt} && epstopdf #{@output}.eps`
       Dir.chdir(old_dir)
+      return File.join(@tmpdir,"#{@output}.eps")
     end
     
     protected
@@ -169,8 +170,8 @@ module Graph
       @data = filenames.map { |filename| [Report::TypicalityData.new(filename),filename] }
       super(output)
       self.tmpdir += "/typicality"
-      self.yrange = "[0:0.5]"
-      self.ylabel = "\"Correlation between similarity/generation frequency\""
+      self.yrange = "[0:1.0]"
+      self.ylabel = "\"Correlation between similarity/human-estimated typicality\""
     end
     
     # Get the p-value for each pair of correlations (via Regress). Has no effect on the graph produced, but 
