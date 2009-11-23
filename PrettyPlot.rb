@@ -2,17 +2,19 @@
 
 require 'lib/Graph'
 
+model = ARGV[0].capitalize
+
 input = {
-  "McraeDepspaceClutoRb" => "Top-Down",
-  "McraeDepspaceClutoAgglo" => "Bottom-Up",
-  "McraeDepspaceClutoGraph" => "Graph",
-  "DepspaceBaselineCosine" => "Baseline",
+  "McraeDepspace#{model}" => "Depspace",
+  "McraeLsa#{model}" => "LSA",
+  "McraeLda#{model}" => "LDA",
+  "McraeMcrae#{model}" => "Mcrae",
 #  "LsaBaselineCosine" => "LSA",
 #  "LdaBaselineCosine" => "LDA",
 #  "DepspaceBaselineCosine" => "Depspace"
 }
 
-output = "McraeDepspaceCluto"
+output = "Mcrae#{model}"
 
 graph = Graph::CombinedPlot.new(output,input)
 graph.render

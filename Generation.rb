@@ -2,16 +2,16 @@ require 'progressbar'
 require 'lib/Oracle'
 require 'lib/Models'
 
-def generate_exemplars_for_category(label,filepath)
-  out = File.open(filepath,"w")
+def generate_exemplars_for_category(label,out)
+#  out = File.open(filepath,"w")
   best = []
   best_ex = []
-  iprogress = ProgressBar.new(label,exemplars.size)
+  iprogress = ProgressBar.new(label,@exemplars.size)
   
   begin
-  exemplars.each_with_index do |exemplar,i|
+  @exemplars.each_with_index do |exemplar,i|
    if exemplar.word =~ /^[a-zA-Z0-9]+$/
-    sim = model.similarity(exemplar.word,label)
+    sim = @model.similarity(exemplar.word,label)
     if sim and not sim.nan?
       found = false
       best.each_with_index { |x,i| found ||= (x[0] == exemplar.word ? i : false) }
@@ -32,16 +32,22 @@ def generate_exemplars_for_category(label,filepath)
   end
   out.print "#{label}: "
   out.puts best.map { |x| "#{x[0]}" }.join(", ")
-  out.close
+#  out.close
 end
 
 model_sym = ARGV[0].to_sym
-label = ARGV[1]
+#label = ARGV[1]
 
-model = Models.load(model_sym)
-exemplars = Oracle.exemplars()
+@model = Models.load(model_sym)
+@exemplars = (ARGV.include?("--mcrae") ? Oracle.mcrae_exemplars : Oracle.exemplars)
+labels = ARGV.include?("--mcrae") ? Oracle.mcrae_categories : Oracle.categories
 
 path = "results/generation/"+Models.output_path(model_sym)
+fout = File.open(path,"w")
+progress = ProgressBar.new("Generating",labels.size)
 labels.each do |label|
-  generate_exemplars_for_category(label,path)
+  generate_exemplars_for_category(label,fout)
+  progress.inc
 end
+progress.finish
+fout.close
