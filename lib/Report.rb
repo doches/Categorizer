@@ -22,9 +22,12 @@ module Report
   class NamingData
     # An array of NamingResult objects, one per line
     attr_reader :results
+    # Filename
+    attr_reader :filename
     
     # Load a report from 'filename'
     def initialize(filename)
+      @filename = filename
       @results = []
       IO.foreach(filename) do |line|
         exemplar,categories = *line.strip.split(": ")
