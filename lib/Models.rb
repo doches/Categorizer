@@ -1,3 +1,5 @@
+require 'lib/String'
+
 # Dynamically load anything that _might_ be a subclass of Model in the +lib/+ directory. Any file
 # that ends in "Model.rb" is loaded (which catches some useless stuff like LsaModel, but also gets
 # everything it should.
@@ -27,5 +29,47 @@ class Models
   # Used internally to transform symbolic names (i.e. +:lsa_cluto_rb+) into intercapped model class names (i.e. LsaClutoRbModel). Returns a string of the class name.
   def Models.sym_to_class(sym)
     return sym.to_s.gsub(":","").split("_").map { |x| x.capitalize }.join("")
+  end
+  
+  # Generate a graph-friendly name for this model. If +use_space_label+ is true, returns the
+  # space of the class; otherwise, returns a descriptive moniker for the clustering model used.
+  def Models.class_to_label(class_name,use_space_label=false)
+    label = class_name
+    pieces = class_name.split_intercapped
+    if pieces[0] == "Mcrae" # Discard 'mcrae' indicator
+      pieces.shift
+    end
+    
+    space = pieces.shift
+    return space if use_space_label
+    
+    model = pieces.shift
+    case model
+      when "Cluto"
+        submodel = pieces.shift
+        case submodel
+          when "Rb"
+            label = "Top-Down"
+          when "Rbr"
+            label = "Top-Down"
+          when "Graph"
+            label = "Graph"
+          when "Agglo"
+            label = "Bottom-Up"
+          when "Bagglo"
+            label = "Bottom-Up"
+          when "Direct"
+            label = "K-Means"
+        end
+      when "Baseline"
+        label = "Human Target"
+      when "Cw"
+        label = "Graph-Based"
+      when "Autoclass"
+        label = "Bayesian"
+    end
+    
+    label = "\"#{label}\"" if label.include?(" ")
+    return label
   end
 end
