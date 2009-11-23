@@ -25,8 +25,6 @@ module Report
     
     # Load a report from 'filename'
     def initialize(filename)
-      oracle = Oracle.raw
-      
       @results = []
       IO.foreach(filename) do |line|
         exemplar,categories = *line.strip.split(": ")
@@ -100,20 +98,29 @@ module Report
     attr_reader :categories
     # The average overlap between the generated exemplars and the Oracle.
     attr_reader :average
+    # The number of generated exemplars (for significance testing)
+    attr_reader :count
+    # The number of correct generated exemplars (again, for significance)
+    attr_reader :correct
     
     # Load a Generation.rb report and compute the average overlap between
     # the generated exemplars and those of the Oracle.
-    def initialize(filename)
+    def initialize(filename,use_mcrae_oracle = false)
       oracle = Oracle.raw
+      if use_mcrae_oracle
+        oracle = Oracle.mcrae_raw
+      end
 
       @filename = filename
       @categories = {}
       empty = []
+      @count = 0
       IO.foreach(filename) do |line|
         label,exemplars = *line.strip.split(": ")
         exemplars = exemplars.nil? ? [] : exemplars.split(", ")
         @categories[label] = exemplars if not exemplars.size == 0
         empty.push label if exemplars.nil? or exemplars.size <= 1
+        @count += exemplars.size if not exemplars.nil?
       end
       
 #      raise "No exemplars generated for #{empty.join(', ')}" if empty.size > 1
@@ -124,7 +131,8 @@ module Report
         @overlaps[category] = best.reject { |x| not exemplars.include?(x) }
       end
       
-      @average = @overlaps.values.inject(0) { |s,x| s += x.size } / @overlaps.size.to_f
+      @correct = @overlaps.values.inject(0) { |s,x| s += x.size } 
+      @average = @correct / @overlaps.size.to_f
     end
     
     # How many categories were predicted?
