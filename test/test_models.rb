@@ -7,7 +7,7 @@ class TestModels < Test::Unit::TestCase
       "McraeLsaAutoclass" => "Bayesian",
       "McraeLdaAutoclass" => "Bayesian",
       "DepspaceAutoclass" => "Bayesian",
-      "McraeMcraeCw" => "Graph-Based",
+      "McraeMcraeCw" => "Graph",
       "McraeMcraeClutoRb" => "Top-Down",
       "LsaBaseline" => "Oracle",
       "McraeMcraeBaseline" => "Oracle"

@@ -53,7 +53,7 @@ if do_sig
       str = a[1].split("/").pop.split(".")[0] + " > " +  b[1].split("/").pop.split(".")[0]
       found_p = nil
       p.each do |p_value|
-        if Significance.send(test,a[0],b[0],p_value)
+        if Significance.send(test,a[0],b[0],p_value) and a[0].value > b[0].value
           puts "#{str} (#{p_value})"
           found_p = p_value
           break

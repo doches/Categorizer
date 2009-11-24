@@ -64,7 +64,7 @@ class Models
       when "Baseline"
         label = "Oracle"
       when "Cw"
-        label = "Graph-Based"
+        label = "Graph"
       when "Autoclass"
         label = "Bayesian"
     end
