@@ -1,4 +1,5 @@
 require 'lib/Report'
+require 'lib/Models'
 
 # Produce GNUPlot graphs from raw Naming/Generation/Typicality data
 module Graph
@@ -44,7 +45,7 @@ module Graph
       @output = output
       @attribs = {
         "terminal" => "postscript",
-        "size" => "1,1",
+        "size" => "0.5,0.5",
         "output" => "\"#{output}.eps\"",
         "xrange" => "[0:9]",
         "yrange" => "[0:1]"
@@ -57,6 +58,9 @@ module Graph
       old_dir = Dir.getwd
       Dir.chdir(@tmpdir)
       `gnuplot #{plt} && epstopdf #{@output}.eps`
+      3.times do 
+        `pdf90 #{@output}.pdf --outfile rotate_temp.pdf && mv rotate_temp.pdf #{@output}.pdf`
+      end
       Dir.chdir(old_dir)
       return File.join(@tmpdir,"#{@output}.eps")
     end
@@ -134,16 +138,18 @@ module Graph
   # An abstract bar graph (e.g. a GNUPlot graph using "with boxes fs solid").
   # Subclass to provide data.
   class BarPlot < Plot
-    def initialize(output)
+    def initialize(output,label_type=false)
       super(output)
       
       raise "BarPlot requires @data initialization before call to super() in constructor" if @data.nil?
       
+      @rotate = !label_type
       self.boxwidth = "0.75"
       self.xrange = "[-1:#{@data.size}]"
       tics = []
-      @data.each_with_index { |x,i| tics.push "\"#{x[1].split('/').pop.split('.').shift}\" #{i}" }
-      self.xtics = "(#{tics.join(', ')}) rotate"
+      @data.sort! { |a,b| Models.class_to_label(a[0].filename.split("/").pop.split(".").shift,label_type) <=> Models.class_to_label(b[0].filename.split("/").pop.split(".").shift,label_type) }
+      @data.each_with_index { |x,i| tics.push "\"#{Models.class_to_label(x[1].split('/').pop.split('.').shift,label_type)}\" #{i}" }
+      self.xtics = "(#{tics.join(', ')}) #{@rotate ? "rotate" : ""}"
     end
     
     def to_dat(force=false)
@@ -166,12 +172,12 @@ module Graph
     # [filenames]  Each file in 'filenames' should consist of two columns of numbers, one line per exemplar/category pair, with 
     #              generation frequency in the first column and the predicted similarity between the category and exemplar in the second.
     # [output]     The filename to use in producing the final graph (as well as any temporary or data files created therein).
-    def initialize(filenames,output)
+    def initialize(filenames,output,space_label)
       @data = filenames.map { |filename| [Report::TypicalityData.new(filename),filename] }
-      super(output)
+      super(output,space_label)
       self.tmpdir += "/typicality"
       self.yrange = "[0:1.0]"
-      self.ylabel = "\"Correlation between similarity/human-estimated typicality\""
+      self.ylabel = "\"Correlation w/ typicality ratings\""
     end
     
     # Get the p-value for each pair of correlations (via Regress). Has no effect on the graph produced, but 
@@ -198,12 +204,12 @@ module Graph
     #               category2: word4, word5, word6...
     #               ...
     # [output]    The filename to use in producing the final graph, as well as any temporary or data files created along the way.
-    def initialize(filenames,output)
-      @data = filenames.map { |filename| [Report::GenerationData.new(filename),filename] }
-      super(output)
+    def initialize(filenames,output,space_label)
+      @data = filenames.map { |filename| [Report::GenerationData.new(filename,filename.include?("Mcrae")),filename] }
+      super(output,space_label)
       self.tmpdir += "/generation"
-      self.yrange = "[0:10]"
-      self.ylabel = "\"Average overlap between top 20 exemplars\""
+      self.yrange = "[0:20]"
+      self.ylabel = "\"Average overlap (N/20 exemplars)\""
     end
   end
   
@@ -216,11 +222,11 @@ module Graph
     #               exemplar1 (correct_category): category1 (sim)  category2 (sim)  category3 (sim)...
     #               exemplar2 ...
     # [output]    Used to name the final graph and any data/temporary files produced along the way (i.e. output.eps, output.dat, output.pdf)
-    def initialize(filenames,output)
+    def initialize(filenames,output,space_label)
       @data = filenames.map { |filename| [Report::NamingData.new(filename),filename] }
-      super(output)
+      super(output,space_label)
       self.tmpdir += "/naming"
-      self.ylabel = "\"Proportion Correct\""
+      self.ylabel = "\"Proportion correct\""
     end
   end
   

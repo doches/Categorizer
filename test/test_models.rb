@@ -9,7 +9,8 @@ class TestModels < Test::Unit::TestCase
       "DepspaceAutoclass" => "Bayesian",
       "McraeMcraeCw" => "Graph-Based",
       "McraeMcraeClutoRb" => "Top-Down",
-      "LsaBaseline" => "\"Human Target\""
+      "LsaBaseline" => "Oracle",
+      "McraeMcraeBaseline" => "Oracle"
     }
     map.each_pair do |klass,label|
       assert_equal label,Models.class_to_label(klass)

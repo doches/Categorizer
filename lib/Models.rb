@@ -62,14 +62,14 @@ class Models
             label = "K-Means"
         end
       when "Baseline"
-        label = "Human Target"
+        label = "Oracle"
       when "Cw"
         label = "Graph-Based"
       when "Autoclass"
         label = "Bayesian"
     end
     
-    label = "\"#{label}\"" if label.include?(" ")
+#    label = "\"#{label}\"" if label.include?(" ")
     return label
   end
 end

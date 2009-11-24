@@ -29,8 +29,7 @@ module BaselineCosine
       end
       @predicted[category] = @predicted[category].sort { |a,b| b[1] <=> a[1] }[0..9].map { |x| x[0] }
     end
-    @debug = true
-    
+    @debug = false
     @cosines = Cosine.new(File.join(@datapath,"cosine_wordmap.yaml"),File.join(@datapath,"cosine_matrix.yaml"))
   end
   

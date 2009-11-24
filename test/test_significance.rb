@@ -32,4 +32,12 @@ class TestSignificance < Test::Unit::TestCase
     assert_equal false,Significance.typicality_test(a,a)
     assert_equal false,Significance.typicality_test(b,b)
   end
+
+  def test_generation
+    a = Report::GenerationData.new("results/generation/McraeLsaBaseline.report",true)
+    b = Report::GenerationData.new("results/generation/McraeLsaAutoclass.report",true)
+    assert_equal true,Significance.generation_test(a,b)
+    assert_equal false,Significance.generation_test(a,a)
+    assert_equal false,Significance.generation_test(b,b)
+  end
 end

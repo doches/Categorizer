@@ -50,11 +50,9 @@ module Significance
   end
   
   # Determine whether the difference between two GenerationData objects is significant at the give p-value
-  #
-  # NOT IMPLEMENTED
   def Significance.generation_test(a,b,p=0.05)
-    #chi = Significance.chi_squared(a.overlap*
-    raise "not implemented"
+    chi = Significance.chi_squared(a.correct,a.count,b.correct,b.count)
+    return Significance.chi_p(chi,p,2)
   end
   
   # Determine whether the difference between two TypicalityData objects is significant at the given p-value

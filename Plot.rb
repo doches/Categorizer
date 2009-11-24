@@ -6,11 +6,13 @@ require 'lib/Significance'
 #
 # Usage: Ruby Plot.rb -t <gen|typ|nam> -r <regex> -o <prefix> <options>
 # Options: 
-#   -s    Also print significance information
+#   -s      Also print significance information
+#   --space Use space labels instead of clustering labels
 regex = Regexp.compile(ARGV[ARGV.index("-r")+1])
 task = ARGV[ARGV.index("-t")+1].downcase
 prefix = ARGV[ARGV.index("-o")+1]
 do_sig = ARGV.include?("-s")
+label_space = ARGV.include?("--space")
 
 files = []
 Dir.foreach("results/#{task}/") do |file|
@@ -19,15 +21,16 @@ end
 
 paths = []
 workdir = Dir.getwd
-STDERR.puts "Plotting #{files.map { |x| x.split("/").pop }.join(", ")} into #{prefix}..."
+#STDERR.puts "Plotting #{files.map { |x| x.split("/").pop }.join(", ")} into #{prefix}..."
+STDERR.puts prefix
 graph = nil
 case task
   when "naming"
-    graph = Graph::NamingBarPlot.new(files,prefix)
+    graph = Graph::NamingBarPlot.new(files,prefix,label_space)
   when "generation"
-    graph = Graph::GenerationPlot.new(files,prefix)
+    graph = Graph::GenerationPlot.new(files,prefix,label_space)
   when "typicality"
-    graph = Graph::TypicalityPlot.new(files,prefix)
+    graph = Graph::TypicalityPlot.new(files,prefix,label_space)
   else
     raise "Unrecognized task \"#{task}\" -- should be one of \"nam\",\"gen\",\"typ\""
 end
