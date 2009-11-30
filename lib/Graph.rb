@@ -126,8 +126,8 @@ module Graph
       file.puts "=table"
       # Data
       @data.sort.each do |model,key|
-        naming = Report::NamingData.new(File.join("results","naming",model+".report"))
-        typicality = Report::TypicalityData.new(File.join("results","typicality",model+".report"))
+        naming = Report::NamingData.new(File.join("results","naming",model+".report"),true)
+        typicality = Report::TypicalityData.new(File.join("results","typicality",model+".report"),true)
         file.puts [key,naming.value,typicality.value].join("\t")
       end
       file.close
@@ -135,6 +135,66 @@ module Graph
     end
   end
   
+  # Uses bargraph.pl to produce a barplot comparing multiple models in different spaces on the same task.
+  # Do not use directly; instead, use one of the specialized ComparisonPlots (NamingComparisonPlot, TypicalityComparisonPlot, or GenerationComparisonPlot).
+  #
+  # usage:
+  #   plot = ComparisonPlot.new("OutputGraph", {"model-name" => ["results1.report","results2.report"]...},["Space1","Space2"])
+  #   plot.render()
+  class ComparisonPlot < CombinedPlot
+    attr_accessor :report_class
+    
+    def initialize(output,models,spaces)
+      super(output,models)
+      @attribs['extraops'] = "set yrange [0:1]; set ytics autofreq;"
+      @spaces = spaces
+      @report_class = nil
+    end
+    
+    def to_bar
+      fname = "#{@output}.bar"
+      file = File.join(@tmpdir,fname)
+      file = File.open(file,"w")
+      file.puts "=cluster;#{@spaces.join(';')}"
+      @attribs.sort.each do |key,value|
+        file.puts "#{key}=#{value}"
+      end
+      file.puts "=norotate"
+      file.puts "=table"
+      # Data
+      @data.sort.each do |model,reports|
+        reports.map! { |filename| @report_class.new(filename).value }
+        file.puts [model,reports].flatten.join("\t")
+      end
+      file.close
+      return fname
+    end
+  end
+  
+  class NamingComparisonPlot < ComparisonPlot
+    def initialize(output,models,spaces)
+      super(output,models,spaces)
+      @attribs['extraops'] += "set ylabel \"Proportion Correct\";"
+      self.report_class = Report::NamingData
+    end
+  end
+  
+  class TypicalityComparisonPlot < ComparisonPlot
+    def initialize(output,models,spaces)
+      super(output,models,spaces)
+      @attribs['extraops'] += "set ylabel \"Correlation w/ Typicality\";"
+      self.report_class = Report::TypicalityData
+    end
+  end
+
+  class GenerationComparisonPlot < ComparisonPlot
+    def initialize(output,models,spaces)
+      super(output,models,spaces)
+      @attribs['extraops'] += "set ylabel \"Average Overlap\";set yrange [0:20];"
+      self.report_class = Report::GenerationData
+    end
+  end
+
   # An abstract bar graph (e.g. a GNUPlot graph using "with boxes fs solid").
   # Subclass to provide data.
   class BarPlot < Plot

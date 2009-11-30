@@ -26,7 +26,7 @@ module Report
     attr_reader :filename
     
     # Load a report from 'filename'
-    def initialize(filename)
+    def initialize(filename,use_mcrae_oracle=false)
       @filename = filename
       @results = []
       IO.foreach(filename) do |line|
@@ -73,7 +73,7 @@ module Report
     # 
     # [filename] A file consist of two columns of tab-delimited numbers,
     #            corresponding to generation frequency and category similarity
-    def initialize(filename)
+    def initialize(filename,use_mcrae_data=false)
       @filename = filename
       data = `cat #{filename}`.split("\n").map { |line| line.strip.split("\t").map { |i| i.to_f } }.reject { |pair| pair[1] == 0.0 }
       @regress = Regress.new(data)
@@ -110,8 +110,12 @@ module Report
     # the generated exemplars and those of the Oracle.
     def initialize(filename,use_mcrae_oracle = false)
       oracle = Oracle.raw
-      if use_mcrae_oracle
+      if use_mcrae_oracle or filename.include?("Mcrae")
         oracle = Oracle.mcrae_raw
+      end
+      
+      if not File.exists?(filename)
+        raise "\"#{filename}\" does not exist"
       end
 
       @filename = filename
@@ -129,6 +133,7 @@ module Report
 #      raise "No exemplars generated for #{empty.join(', ')}" if empty.size > 1
 
       @overlaps = {}
+      STDERR.puts filename
       @categories.each_pair do |category,exemplars|
         best = oracle[category].map { |x| x }.sort { |a,b| b[1] <=> a[1] }[0..20].map { |x| x[0] }
         @overlaps[category] = best.reject { |x| not exemplars.include?(x) }
