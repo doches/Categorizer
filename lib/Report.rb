@@ -133,7 +133,6 @@ module Report
 #      raise "No exemplars generated for #{empty.join(', ')}" if empty.size > 1
 
       @overlaps = {}
-      STDERR.puts filename
       @categories.each_pair do |category,exemplars|
         best = oracle[category].map { |x| x }.sort { |a,b| b[1] <=> a[1] }[0..20].map { |x| x[0] }
         @overlaps[category] = best.reject { |x| not exemplars.include?(x) }

@@ -2,9 +2,9 @@ require 'progressbar'
 require 'lib/Oracle'
 require 'lib/Models'
 
-model = Models.load(ARGV[0].to_sym)
 mcrae = ARGV.include?("--mcrae")
 ARGV.reject! { |x| x == "--mcrae" }
+model = Models.load(ARGV[0].to_sym)
 exemplars = mcrae ? Oracle.mcrae_exemplars() : Oracle.exemplars()
 labels = mcrae ? Oracle.mcrae_categories() : Oracle.categories
 
@@ -15,7 +15,7 @@ exemplars.each do |exemplar|
   if exemplar.word =~ /^[a-zA-Z0-9]+$/ and model.query(exemplar.word)
     sim = model.similarity(exemplar.word,exemplar.category)
     if sim and not sim.nan?
-      out.puts "#{exemplar.frequency}\t#{sim}"
+      out.puts "#{exemplar.typicality}\t#{sim}"
       out.flush()
     end
     counts [0] += 1

@@ -7,6 +7,6 @@ class LsaClutoGraphModel < LsaModel
   def initialize
     super
     
-    init_cluster("lsa.graph.predicted.centroid.yaml")
+    init_cluster("lsa2.graph.predicted.centroid.yaml")
   end
 end

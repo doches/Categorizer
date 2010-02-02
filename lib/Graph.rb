@@ -232,7 +232,7 @@ module Graph
     # [filenames]  Each file in 'filenames' should consist of two columns of numbers, one line per exemplar/category pair, with 
     #              generation frequency in the first column and the predicted similarity between the category and exemplar in the second.
     # [output]     The filename to use in producing the final graph (as well as any temporary or data files created therein).
-    def initialize(filenames,output,space_label)
+    def initialize(filenames,output,space_label=false)
       @data = filenames.map { |filename| [Report::TypicalityData.new(filename),filename] }
       super(output,space_label)
       self.tmpdir += "/typicality"
@@ -264,7 +264,7 @@ module Graph
     #               category2: word4, word5, word6...
     #               ...
     # [output]    The filename to use in producing the final graph, as well as any temporary or data files created along the way.
-    def initialize(filenames,output,space_label)
+    def initialize(filenames,output,space_label=false)
       @data = filenames.map { |filename| [Report::GenerationData.new(filename,filename.include?("Mcrae")),filename] }
       super(output,space_label)
       self.tmpdir += "/generation"
@@ -282,7 +282,7 @@ module Graph
     #               exemplar1 (correct_category): category1 (sim)  category2 (sim)  category3 (sim)...
     #               exemplar2 ...
     # [output]    Used to name the final graph and any data/temporary files produced along the way (i.e. output.eps, output.dat, output.pdf)
-    def initialize(filenames,output,space_label)
+    def initialize(filenames,output,space_label=false)
       @data = filenames.map { |filename| [Report::NamingData.new(filename),filename] }
       super(output,space_label)
       self.tmpdir += "/naming"

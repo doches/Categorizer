@@ -64,7 +64,7 @@ module Cluster
     if sims.size <= 0
       STDERR.puts "No cluster-labels matching #{label} found, letting sim(#{word},#{label}) = 0" if @debug
 #      STDERR.puts @predicted.keys.inspect
-      raise "no cluster-labels"
+      raise "No cluster-labels matching #{label} found!"
       return rand
     else
       begin

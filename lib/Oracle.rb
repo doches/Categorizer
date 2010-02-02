@@ -13,9 +13,16 @@ class Oracle
   @@yaml = nil
   @@mcrae = nil
   
+  @@mturk_file = "categories.yaml"
+  
+  # Change what data source the oracle uses for mturk words
+  def Oracle.data=(filename)
+    @@mturk_file = filename
+  end
+  
   # Load +data/categories.yaml+ if we haven't done so already.
   def Oracle.init
-    @@yaml = YAML.load_file("data/categories.yaml") if not @@yaml
+    @@yaml = YAML.load_file("data/#{@@mturk_file}") if not @@yaml
   end
   
   def Oracle.init_mcrae
@@ -40,7 +47,11 @@ class Oracle
     exemplars = []
     @@yaml.each_pair do |category,list|
       list.each_pair do |word,freq|
-        exemplars.push Exemplar.new(word,category,freq)
+        if freq.is_a?(Array)
+          exemplars.push Exemplar.new(word,category,freq[0],freq[1])
+        else
+          exemplars.push Exemplar.new(word,category,freq)
+        end
       end
     end
     return exemplars
@@ -51,7 +62,7 @@ class Oracle
     exemplars = []
     @@mcrae.each_pair do |category,list|
       list.each_pair do |word,typ|
-        exemplars.push Exemplar.new(word,category,typ)
+        exemplars.push Exemplar.new(word,category,0,typ)
       end
     end
     return exemplars

@@ -65,6 +65,10 @@ module Baseline
   # NOTE: the similarity is normalized by the size of the cluster.
   def similarity_cluster(word_vector,clabel)
     sim = 0
+    if @predicted[clabel].nil?
+#      STDERR.puts "no predicted members for #{clabel}, sim_cluster = 0.0"
+      return 0.0
+    end
     @predicted[clabel].each do |exemplar|
       exemplar_vector = cache(exemplar)
       if not exemplar_vector or exemplar_vector.size <= 1

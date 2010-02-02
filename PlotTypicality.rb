@@ -33,6 +33,7 @@ cats.each_pair do |method,files|
   graph = Graph::TypicalityPlot.new(files,method)
   paths.push graph.render
   Dir.chdir(dir)
+  exit
 end
 
 if paths.size > 1

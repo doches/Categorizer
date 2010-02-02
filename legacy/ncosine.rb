@@ -30,3 +30,9 @@ end
 def cosine(v1,v2)
   return dot_product_n(v1,v2) / (magnitude_e(v1) * magnitude_e(v2))
 end
+
+def cosine_safe(v1,v2)
+  v1 = NVector.to_na(v1) if not v1.is_a? NVector
+  v2 = NVector.to_na(v2) if not v2.is_a? NVector
+  return cosine(v1,v2)
+end

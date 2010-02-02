@@ -22,7 +22,7 @@ class LdaModel < Model
   # clients are using the same server) extra lookup time. However, loading the
   # LDA space into memory takes an inordinate amount of time, so you may save time loading 
   # once into a remote server and taking the hit with regard to network latency. YMMV.
-  def initialize(source=Server,name=ModelName)
+  def initialize(source=ModelPath,name=ModelName)
     super()
     
     @datapath = "data/lda/"
@@ -41,7 +41,7 @@ class LdaModel < Model
   
   # Get the LDA-space vector (using topics as dimensions) for this word.
   def vector(word)
-    return @legacy_model[word]
-    #return @legacy_model.vector(word)
+#    return @legacy_model[word]
+    return @legacy_model.vector(word)
   end
 end

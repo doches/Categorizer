@@ -8,7 +8,7 @@ require 'lib/Significance'
 # Options: 
 #   -s      Also print significance information
 #   --space Use space labels instead of clustering labels
-regex = Regexp.compile(ARGV[ARGV.index("-r")+1])
+regex = ARGV[ARGV.index("-r")+1]
 task = ARGV[ARGV.index("-t")+1].downcase
 prefix = ARGV[ARGV.index("-o")+1]
 do_sig = ARGV.include?("-s")
@@ -16,13 +16,17 @@ label_space = ARGV.include?("--space")
 
 files = []
 Dir.foreach("results/#{task}/") do |file|
-  files.push File.join("results/#{task}",file) if file.gsub(".result","") =~ regex
+  model_name = file.gsub(".report","")
+  if model_name =~ /^#{regex}$/
+    files.push File.join("results/#{task}",file)
+  end
 end
 
 paths = []
 workdir = Dir.getwd
 #STDERR.puts "Plotting #{files.map { |x| x.split("/").pop }.join(", ")} into #{prefix}..."
 STDERR.puts prefix
+files.each { |f| STDERR.puts "\t#{f}" }
 graph = nil
 case task
   when "naming"
